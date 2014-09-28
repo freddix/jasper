@@ -1,11 +1,16 @@
+# based on PLD Linux spec git://git.pld-linux.org/packages/.git
 Summary:	JasPer - collection of software for coding and manipulation of images
 Name:		jasper
 Version:	1.900.1
-Release:	15
+Release:	16
 License:	BSD-like
 Group:		Libraries
 Source0:	http://www.ece.uvic.ca/~mdadams/jasper/software/%{name}-%{version}.zip
 # Source0-md5:	a342b2b4495b3e1394e161eb5d85d754
+Patch0:		%{name}-jpc_dec.c.patch
+Patch1:		%{name}-tepsizes-overflow.patch
+Patch2:		%{name}-CVE-2008-3520.patch
+Patch3:		%{name}-CVE-2008-3522.patch
 URL:		http://www.ece.uvic.ca/~mdadams/jasper/
 BuildRequires:	OpenGL-glut-devel >= 3.7
 BuildRequires:	autoconf
@@ -55,8 +60,13 @@ should suffice.
 
 %prep
 %setup -q
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
 
-sed -i -e 's|-lXi||g' configure.ac
+# not used
+%{__sed} -i -e 's| -lXmu -lXi -lXext -lXt | |' configure.ac
 
 %build
 %{__libtoolize}
